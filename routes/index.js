@@ -13,25 +13,16 @@ router.get("/",(req,res) => {
         message:"hello"
     })
 })
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'images/')
-    },
-    filename: (req, file, cb) => {
-      cb(null, file.originalname)
-    },
-  })
-  
-  const upload = multer({ storage: storage })
+
 
 router.post("/singup",controller.register)
 router.post("/login",controller.login)
 
-
-router.post('/upload-image', upload.single('file'), controller.sendImages)
+router.post('/upload-image', controller.sendImages)
 
 router.get("/get-image",controller.getImages)
-    
+
+router.get("/:id",controller.find)
     
 
 

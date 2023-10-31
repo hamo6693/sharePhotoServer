@@ -5,8 +5,9 @@ const jsonwebtoken = require("jsonwebtoken");
 
 const mongoose = require("mongoose")
 
-require("../models/img");
-const Image = mongoose.model("ImageDetails");
+
+const Image = require("../models/img");
+
 
 exports.register = async(req, res) => {
     const {name,email,password,confPassword} = req.body;
@@ -40,7 +41,11 @@ exports.login = async(req,res) => {
         const authSuccess = await bcrypt.compare(password,user.password)
         if(authSuccess) {
             const token = jsonwebtoken.sign({id:user.id,name:user.name,email:user.email},process.env.JWT_SECRET)
-            res.status(200).json({accessToken:token})
+            res.status(200).json({
+                id:user.id,
+                //name:user.name,
+                accessToken:token
+            })
         }else{
             console.log("wrong");
         }
@@ -50,26 +55,33 @@ exports.login = async(req,res) => {
 }
 
 exports.sendImages = async(req,res) => {
-    const {image} = req.body;
+    const {base64} = req.body;
     try {
-      await Image.create({ image: image });
+        
+      await Image.create({ image: base64 });
       res.json({ status: "تم ارسال الصورة" });
     } catch (error) {
-      res.json({ status: "error",data:error });
+      res.json({ status: "error",data:error })
     }
 }
 
 exports.getImages = async(req,res) => {
+    
     try {
       await Image.find({}).then(data => {
-        res.send({status:"ok",data:data})
+        res.send({status:"suess",data:data})
       })
     } catch (error) {
       res.json({ status: "error",data:error });
     }
 }
 
-  
+exports.find = async(req,res) => {
+    const {id} = req.params
+    const image = await Image.findById(id)
+    if(!image) return res.status(404).send()
+    res.json({success:true,data:image})
+}
 
 
     
