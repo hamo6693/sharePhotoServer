@@ -19,10 +19,15 @@ router.post("/singup",controller.register)
 router.post("/login",controller.login)
 
 router.post('/upload-image', controller.sendImages)
+//ارسال كل مستخدم صورة
+router.post('/upload-image/:id', controller.sendImages)
+
+
 
 router.get("/get-image",controller.getImages)
 
-router.get("/:id",controller.find)
+router.get("/get-image/:id",controller.getImages)
+
     
 
 

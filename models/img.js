@@ -1,13 +1,16 @@
 
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
 
 const ImageDetailsScehma = new mongoose.Schema({
-   image:{ 
-     type:String
-    }
-  
-  });
+  image:{
+   type:String,
+   require:true
+  },
+  user: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User'
+	}
+});
 
-const ImageDetails = mongoose.model("ImageDetails", ImageDetailsScehma);
-module.exports = ImageDetails
+const Image = mongoose.model("ImageDetails", ImageDetailsScehma);
+module.exports = Image
