@@ -1,41 +1,25 @@
-/*
-const jwtHelpers = require("../utilits/jwtHelpers")
+//فك تشفير البيانات والمصادقة في عملية تسجيل الدخول
+const jwt = require("jsonwebtoken")
 
-exports.check = (req,res,next) => {
-    let token = req.headers["authorization"]
-
-    token = token?.replace("Bearer","")?.trim()
-    const payload = jwtHelpers.verify(token)
-    if(payload) {
-        req.userId = payload.sub
-        return next()
-    }else {
-        res.status(401).json({
-            message:"unauthzation"
-        })
-    }
-
-
-}
-
-*/
-const jsonwebtoken = require("jsonwebtoken");
-const User = require("../models/user")
-
-
-exports.isLoggedIn = async(req,res,next) => {
+//دالة مصادقة تسجيل الدخول
+const isLoggedIn = (req,res,next) => {
     try{
-        if(req.headers.authorization) {
-            return res.status(400).json({
-                message:"لم يتوقر رمز الدخول"
-            });
+        //جلب التشفير من ترويسة الطلب
+        //التحقق من الرمز الدخول
+        const token = req.headers.authorization
+        if(!token) {
+            res.status(401).json({message:"لم يتم الحصول على رمز الدخول"})
         }
-        const token = req.headers.authorization.split(" ")[1];
-        const decoded = jsonwebtoken.verify(token,process.env.JWT_SECRET);
-        req.currentUser = decoded;
-        next()
-    }catch(e){
-        res.status(500)
+        //فك تشفير رمز التحقق
+        const decoded = jwt.verify(token,process.env.JWT_SECRET)
+        //حفظ الرمز
+        //currentuser يحتوي على المعرف والايميل
+        //يحنوي على تفاصيل مسجل الدخول
+        req.currentUser = decoded
+        next();
+    } catch(e){
+        res.status(500).json(e)
     }
 }
 
+module.exports = isLoggedIn

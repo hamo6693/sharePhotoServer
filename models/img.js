@@ -2,6 +2,7 @@
 const mongoose = require("mongoose");
 
 const ImageDetailsScehma = new mongoose.Schema({
+  
   image:{
    type:String,
    require:true
