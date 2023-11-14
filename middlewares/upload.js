@@ -1,4 +1,4 @@
-/*
+
 const multer = require("multer")
 
 const DIR = "./public/images"
@@ -19,6 +19,7 @@ const storage = multer.diskStorage({
   
   const upload = multer({ 
     storage: storage,
+    limits:{fieldSize: 25 * 1024 * 1024},
     //
     fileFilter:(req,file,cb) => {
       if(file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
@@ -30,4 +31,4 @@ const storage = multer.diskStorage({
   })
 
   module.exports = upload;
-  */
+  

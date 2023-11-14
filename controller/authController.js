@@ -76,9 +76,8 @@ exports.sendImage = async (req, res) => {
     const users = await Image.create({
       // هنا user لم تمرر ال
       image: base64,
-      /*user: id,*/
-      
-      user: req.currentUser.id,
+      user: id,
+      user: req.currentUser.id
       
     }).then((users) => {
       res.send({ status: "تم ارسال الصورة" , users })
@@ -98,3 +97,17 @@ exports.getImages = async (req, res) => {
     res.json({ status: "error", data: error });
   }
 };
+
+exports.getImagesUser = async (req,res) => {
+  const { id } = req.params;
+  try{
+    await Image.find({
+      user: id,
+      user: req.currentUser.id
+    }).then(data => {
+      res.send({ status: "ok", data: data });
+    })
+  }catch(e){
+    console.log(e)
+  }
+}
