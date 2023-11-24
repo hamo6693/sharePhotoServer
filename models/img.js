@@ -10,8 +10,21 @@ const ImageDetailsScehma = new mongoose.Schema({
   user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
-	}
+	},
+  title:{
+    type:String,
+    require:true
+  }
 });
 
+/*
+ImageDetailsScehma.set("toJSON",{
+  virtuals:true,
+  versionKey:false,
+  transform:(doc,ret) => {
+    delete ret._id
+  }
+})
+*/
 const Image = mongoose.model("ImageDetails", ImageDetailsScehma);
 module.exports = Image

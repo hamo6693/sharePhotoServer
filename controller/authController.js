@@ -70,14 +70,17 @@ exports.delateImage = async (req, res) => {
 exports.sendImage = async (req, res) => {
   // مع الطلب user  الخاص بالـ id لم ترسل ال
   const { id } = req.params;
-  const { base64 } = req.body;
+  const { base64,title } = req.body;
 
   try {
     const users = await Image.create({
       // هنا user لم تمرر ال
       image: base64,
+      //id img
       user: id,
-      user: req.currentUser.id
+      //user account
+      user: req.currentUser.id,
+      title:title
       
     }).then((users) => {
       res.send({ status: "تم ارسال الصورة" , users })
@@ -111,3 +114,54 @@ exports.getImagesUser = async (req,res) => {
     console.log(e)
   }
 }
+
+//get on post
+exports.getImgTitle = async (req,res) => {
+   const { id } = req.params;
+   try {
+      const getTitle = await Image.findById(id)
+       res.json({
+        sucess:true,
+        data:getTitle
+      })
+      
+    
+   } catch (e) {
+     res.status(500).json(e);
+   }
+}
+
+exports.updateTitle = async (req,res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+  
+     await Image.updateOne(
+      {_id:id},
+      {
+        $set:{title}
+      }
+      
+      )
+     res.json({
+      message:true,
+
+     })
+  
+}
+
+/*
+exports.getImgUser = async (req,res) => {
+  const { _id } = req.params;
+
+  try{
+    await Image.findOne({
+      id:_id,
+      
+    }).then(data => {
+      res.send({status:"ok",data})
+    })
+  }catch(e){
+    console.log(e.message)
+  }
+}
+*/
