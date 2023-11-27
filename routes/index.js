@@ -33,8 +33,11 @@ router.get("/get-image/:id",isLoggedIn,controller.getImagesUser)
 
 //get title id
 router.get("/edit-title/:id",isLoggedIn,controller.getImgTitle);
-
 router.put("/edit-title/:id",isLoggedIn,controller.updateTitle);
+
+
+//عمل لايك
+router.put("/:id/like",isLoggedIn,controller.likeImg);
 
 
 

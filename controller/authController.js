@@ -149,19 +149,21 @@ exports.updateTitle = async (req,res) => {
   
 }
 
-/*
-exports.getImgUser = async (req,res) => {
-  const { _id } = req.params;
 
-  try{
-    await Image.findOne({
-      id:_id,
-      
-    }).then(data => {
-      res.send({status:"ok",data})
-    })
-  }catch(e){
-    console.log(e.message)
+exports.likeImg = async(req,res) => {
+  const {id} = req.params
+  const {user} = req.body
+  try {
+    const post = await Image.findByIdAndUpdate(id);
+    if (!post.likes.includes(user)) {
+      await post.updateOne({ $push: { likes:user } });
+      res.status(200).json("The post has been liked");
+    } else {
+      await post.updateOne({ $pull: { likes: user } });
+      res.status(200).json("The post has been disliked");
+    }
+  } catch (err) {
+    res.status(500).json(err);
   }
 }
-*/
+

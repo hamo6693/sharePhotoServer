@@ -20,7 +20,6 @@ const ModelSchema = new mongoose.Schema({
         required:true,
     },
     
-    
      
 })
 

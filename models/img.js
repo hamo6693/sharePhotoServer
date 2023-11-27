@@ -14,7 +14,11 @@ const ImageDetailsScehma = new mongoose.Schema({
   title:{
     type:String,
     require:true
-  }
+  },
+  likes: {
+    type: Array,
+    default: [],
+  },
 });
 
 /*
