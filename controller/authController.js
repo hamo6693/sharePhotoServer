@@ -9,6 +9,7 @@ const Image = require("../models/img");
 
 exports.register = async (req, res) => {
   const { name, email, password, confPassword } = req.body;
+  
   try {
     const user = await User({
       name,
@@ -17,7 +18,7 @@ exports.register = async (req, res) => {
       confPassword: bcrypt.hashSync(password, 8),
     });
     await user.save();
-    res.status(200).json({ message: "تم انشاء الحساب" });
+    
   } catch (e) {
     res.status(500).json(e);
   }

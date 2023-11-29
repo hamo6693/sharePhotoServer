@@ -37,7 +37,7 @@ router.put("/edit-title/:id",isLoggedIn,controller.updateTitle);
 
 
 //عمل لايك
-router.put("/:id/like",isLoggedIn,controller.likeImg);
+router.put("/like/:id",isLoggedIn,controller.likeImg);
 
 
 
