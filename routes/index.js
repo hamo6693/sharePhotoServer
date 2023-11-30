@@ -14,7 +14,6 @@ router.get("/",(req,res) => {
     })
 })
 
-router.delete('/upload-image/:id',isLoggedIn, controller.delateImage)
 router.post("/register",controller.register)
 router.post("/login",controller.login)
 
@@ -39,6 +38,7 @@ router.put("/edit-title/:id",isLoggedIn,controller.updateTitle);
 //عمل لايك
 router.put("/like/:id",isLoggedIn,controller.likeImg);
 
+router.delete('/upload-image/:id',isLoggedIn, controller.delateImage)
 
 
 module.exports = router

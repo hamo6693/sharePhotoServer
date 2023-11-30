@@ -11,13 +11,23 @@ exports.register = async (req, res) => {
   const { name, email, password, confPassword } = req.body;
   
   try {
+    const hashPassword = await bcrypt.hashSync(password,10)
+    const findEmail = await User.findOne({email})
+
+    if(findEmail === null) {
     const user = await User({
       name,
       email,
-      password: bcrypt.hashSync(password, 8),
-      confPassword: bcrypt.hashSync(password, 8),
-    });
-    await user.save();
+      password: hashPassword,
+      confPassword: hashPassword,
+    })
+    await user.save()
+    res.status(201).json({message:"created account"})
+    
+  }else{
+    res.status(400).json({message:"email is insired"})
+
+  }
     
   } catch (e) {
     res.status(500).json(e);
@@ -55,18 +65,7 @@ exports.login = async (req, res) => {
 
   
 
-//دالة حذف الصور
-exports.delateImage = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const delateImg = await Image.deleteOne({
-      _id: id,
-    });
-    res.json({ status: "تم الحذف " });
-  } catch (error) {
-    res.json({ status: "error", data: error });
-  }
-};
+
 
 exports.sendImage = async (req, res) => {
   // مع الطلب user  الخاص بالـ id لم ترسل ال
@@ -167,4 +166,17 @@ exports.likeImg = async(req,res) => {
     res.status(500).json(err);
   }
 }
+
+//دالة حذف الصور
+exports.delateImage = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const delateImg = await Image.deleteOne({
+      _id: id,
+    });
+    res.json({ status: "تم الحذف " });
+  } catch (error) {
+    res.json({ status: "error", data: error });
+  }
+};
 
