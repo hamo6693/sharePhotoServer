@@ -13,8 +13,8 @@ exports.register = async (req, res) => {
   try {
     const hashPassword = await bcrypt.hashSync(password,10)
     const findEmail = await User.findOne({email})
-
-    if(findEmail === null) {
+    
+    if(findEmail === null && password === confPassword) {
     const user = await User({
       name,
       email,
@@ -25,7 +25,7 @@ exports.register = async (req, res) => {
     res.status(201).json({message:"created account"})
     
   }else{
-    res.status(400).json({message:"email is insired"})
+    res.status(400).json({message:"خطا في البريد الالكتروني او كلمة المرور"})
 
   }
     

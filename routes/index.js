@@ -19,7 +19,7 @@ router.post("/login",controller.login)
 
 
 //ارسال الصورة
-router.post('/upload-image', upload.single("images"),isLoggedIn, controller.sendImage);
+router.post('/upload-image', upload.single("file"),isLoggedIn, controller.sendImage);
 
 //جلب كل الصور
 
