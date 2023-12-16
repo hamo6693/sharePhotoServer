@@ -1,10 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
-const jwtHelpers = require("../utilits/jwtHelpers");
 const jwt = require("jsonwebtoken");
-
-const mongoose = require("mongoose");
-
 const Image = require("../models/img");
 
 exports.register = async (req, res) => {
