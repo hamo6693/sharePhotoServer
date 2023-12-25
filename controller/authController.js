@@ -10,7 +10,7 @@ exports.register = async (req, res) => {
     const hashPassword = await bcrypt.hashSync(password,10)
     const findEmail = await User.findOne({email})
     
-    if(findEmail === null && password === confPassword) {
+    if(findEmail === null && password == confPassword) {
     const user = await User({
       name,
       email,
