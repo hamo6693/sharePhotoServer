@@ -66,7 +66,7 @@ exports.login = async (req, res) => {
 exports.sendImage = async (req, res) => {
   // مع الطلب user  الخاص بالـ id لم ترسل ال
   const { id } = req.params;
-  const { base64,title } = req.body;
+  const { base64,title,description } = req.body;
 
   try {
     const users = await Image.create({
@@ -76,7 +76,8 @@ exports.sendImage = async (req, res) => {
       user: id,
       //user account
       user: req.currentUser.id,
-      title:title
+      title:title,
+      description:description
       
     }).then((users) => {
       res.send({ status: "تم ارسال الصورة" , users })
@@ -129,12 +130,12 @@ exports.getImgTitle = async (req,res) => {
 
 exports.updateTitle = async (req,res) => {
   const { id } = req.params;
-  const { title } = req.body;
+  const { title,description } = req.body;
   
      await Image.updateOne(
       {_id:id},
       {
-        $set:{title}
+        $set:{title,description}
       }
       
       )
@@ -175,4 +176,17 @@ exports.delateImage = async (req, res) => {
     res.json({ status: "error", data: error });
   }
 };
+
+exports.getProfile = async (req,res) => {
+  const { id } = req.params;
+  try{
+    const users = await User.findOne({
+      user: id,    
+    })
+    res.status(200).json(users)
+    
+  }catch(e){
+    console.log(e)
+  }
+}
 
