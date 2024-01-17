@@ -5,26 +5,25 @@ const Image = require("../models/img");
 
 exports.register = async (req, res) => {
   const { name, email, password, confPassword } = req.body;
-  
-  try {
-    const hashPassword = await bcrypt.hashSync(password,10)
-    const findEmail = await User.findOne({email})
-    
-    if(findEmail === null && password == confPassword) {
-    const user = await User({
-      name,
-      email,
-      password: hashPassword,
-      confPassword: hashPassword,
-    })
-    await user.save()
-    res.status(201).json({message:"created account"})
-    
-  }else{
-    res.status(400).json({message:"خطا في البريد الالكتروني او كلمة المرور"})
 
-  }
-    
+  try {
+    const hashPassword = await bcrypt.hashSync(password, 10);
+    const findEmail = await User.findOne({ email });
+
+    if (findEmail === null && password == confPassword) {
+      const user = await User({
+        name,
+        email,
+        password: hashPassword,
+        confPassword: hashPassword,
+      });
+      await user.save();
+      res.status(201).json({ message: "created account" });
+    } else {
+      res
+        .status(400)
+        .json({ message: "خطا في البريد الالكتروني او كلمة المرور" });
+    }
   } catch (e) {
     res.status(500).json(e);
   }
@@ -58,12 +57,10 @@ exports.login = async (req, res) => {
   }
 };
 
-
 exports.sendImage = async (req, res) => {
   // مع الطلب user  الخاص بالـ id لم ترسل ال
   const { id } = req.params;
-  const { base64,title,description } = req.body;
-  
+  const { base64, title, description } = req.body;
 
   try {
     const users = await Image.create({
@@ -73,12 +70,11 @@ exports.sendImage = async (req, res) => {
       user: id,
       //user account
       user: req.currentUser.id,
-      title:title,
-      description:description,
+      title: title,
+      description: description,
     }).then((users) => {
-      res.send({ status: "تم ارسال الصورة" , users })
-    })
-    
+      res.send({ status: "تم ارسال الصورة", users });
+    });
   } catch (e) {
     res.status(500).json(e);
   }
@@ -94,62 +90,56 @@ exports.getImages = async (req, res) => {
   }
 };
 
-exports.getImagesUser = async (req,res) => {
+exports.getImagesUser = async (req, res) => {
   const { id } = req.params;
-  try{
+  try {
     await Image.find({
       user: id,
-      user: req.currentUser.id
-    }).then(data => {
+      user: req.currentUser.id,
+    }).then((data) => {
       res.send({ status: "ok", data: data });
-    })
-  }catch(e){
-    console.log(e)
+    });
+  } catch (e) {
+    console.log(e);
   }
-}
+};
 
 //get on post
-exports.getImgTitle = async (req,res) => {
-   const { id } = req.params;
-   try {
-      const getTitle = await Image.findById(id)
-       res.json({
-        sucess:true,
-        data:getTitle
-      })
-      
-    
-   } catch (e) {
-     res.status(500).json(e);
-   }
-}
-
-exports.updateTitle = async (req,res) => {
+exports.getImgTitle = async (req, res) => {
   const { id } = req.params;
-  const { title,description,base64 } = req.body;
-  
-     await Image.updateOne(
-      {_id:id},
-      {
-        $set:{title,description,image:base64}
-      }
-      
-      )
-     res.json({
-      message:true,
+  try {
+    const getTitle = await Image.findById(id);
+    res.json({
+      sucess: true,
+      data: getTitle,
+    });
+  } catch (e) {
+    res.status(500).json(e);
+  }
+};
 
-     })
-  
-}
+exports.updateTitle = async (req, res) => {
+  const { id } = req.params;
+  const { title, description, base64 } = req.body;
 
+  await Image.updateOne(
+    { _id: id },
+    {
+      $set: { title, description, image: base64 },
+    }
+  );
+  res.json({
+    message: true,
+  });
+};
 
-exports.likeImg = async(req,res) => {
-  const {id} = req.params
-  const {user} = req.body
+exports.likeImg = async (req, res) => {
+  const { id } = req.params;
+  const { user } = req.body;
   try {
     const post = await Image.findByIdAndUpdate(id);
     if (!post.likes.includes(user)) {
-      await post.updateOne({ $push: { likes:user } });
+      await post.updateOne({ $push: { likes: user } });
       res.status(200).json("The post has been liked");
     } else {
       await post.updateOne({ $pull: { likes: user } });
@@ -158,7 +148,7 @@ exports.likeImg = async(req,res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-}
+};
 
 //دالة حذف الصور
 exports.delateImage = async (req, res) => {
@@ -173,20 +163,53 @@ exports.delateImage = async (req, res) => {
   }
 };
 
+//show user name
+exports.getNameUser = async (req, res) => {
+  const { id } = req.body;
 
-exports.getProfile = async (req,res) => {
-  const { id } = req.params;
-  const { name } = req.body;
-  try{
-    const users = await User.findOne({
-      user: id,    
-    })
-    res.status(200).json(users.name)
-    
-  }catch(e){
-    console.log(e)
+  try {
+    const users = await User.findById({
+      _id: id,
+      _id: req.currentUser.id,
+    });
+    res.status(200).json(users.name);
+  } catch (e) {
+    console.log(e);
   }
-}
+};
 
+//show information
+exports.getProfile = async (req, res) => {
+  const { id } = req.body;
+  try {
+    const users = await User.findOne({
+      user: id,
+      _id: req.currentUser.id,
+    });
+    res.status(200).json(users);
+  } catch (e) {
+    console.log(e);
+  }
+};
 
+//edit information
+exports.updateProfile = async (req, res) => {
+  const { id } = req.params;
+  const { name, password, confPassword } = req.body;
 
+  try {
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    await User.updateOne(
+      { user: id, _id: req.currentUser.id },
+      {
+        $set: { name, password: hashPassword, confPassword: hashPassword },
+      }
+    );
+    res.json({
+      message: true,
+    });
+  } catch (e) {
+    res.status(500);
+  }
+};

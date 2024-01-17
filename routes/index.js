@@ -37,6 +37,11 @@ router.put("/edit-title/:id", isLoggedIn, controller.updateTitle);
 router.put("/like/:id", isLoggedIn, controller.likeImg);
 
 router.delete("/upload-image/:id", isLoggedIn, controller.delateImage);
-router.get("/profile", isLoggedIn, controller.getProfile);
+
+router.get("/profile", isLoggedIn, controller.getNameUser);
+
+router.get("/get-profile", isLoggedIn, controller.getProfile);
+
+router.put("/update-profile", isLoggedIn, controller.updateProfile);
 
 module.exports = router;
